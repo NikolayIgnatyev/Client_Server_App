@@ -1,0 +1,16 @@
+﻿<Window x:Class="PostgreTest.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PostgreTest"
+        mc:Ignorable="d"
+        Title="Client" Height="93" Width="258">
+    <Canvas>
+        <TextBlock x:Name="tbl1" HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" Text="Info:" VerticalAlignment="Top"/>
+        <Button Content="Send" HorizontalAlignment="Left" Margin="185,6,0,0" VerticalAlignment="Top" Height="24" Width="49" Click="ButtonData_Click"/>
+        <TextBox x:Name="tbsender" HorizontalAlignment="Left" Margin="60,6,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="24"/>
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Name:
+                   " VerticalAlignment="Top" Width="40"/>
+    </Canvas>
+</Window>
