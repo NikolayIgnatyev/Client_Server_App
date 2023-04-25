@@ -65,7 +65,7 @@ namespace PostgreTest
             {
                 if (MessageBox.Show("Таких данных нет в таблице.\nХотите добавить?", "Нет данных", MessageBoxButton.OKCancel, MessageBoxImage.Error) == MessageBoxResult.OK)
                 {
-                    WindowInsert windowInsert = new WindowInsert();
+                    WindowInsert windowInsert = new WindowInsert(tbsender.Text);
                     windowInsert.ShowDialog();
                 }
             }

@@ -11,8 +11,8 @@ namespace Server
 {
     public static class CConnectionDB
     {
-        static string cs = "Host=localhost;Username=postgres;Password=123;Database=postgres";
-        static NpgsqlConnection con = new NpgsqlConnection(cs);
+        readonly static string cs = "Host=localhost;Username=postgres;Password=123;Database=postgres";
+        readonly static NpgsqlConnection con = new NpgsqlConnection(cs);
         
         public static void OpenConnection()
         {
@@ -32,7 +32,7 @@ namespace Server
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    reply += ($"Name: {reader.GetString(0)}, Age: {reader.GetString(1)}");
+                    reply += ($"Name: {reader.GetString(0)}, Age: {reader.GetInt32(1)}");
                 }
                 reader.Close();
                 if (reply == "")
@@ -49,19 +49,27 @@ namespace Server
             try
             {
                 string[] dataIns = data.Split(',');
+                try
+                {
+                    int.Parse(dataIns[1]);
+                }
+                catch (Exception ex)
+                {
+                    reply = ex.Message;
+                }
                 using (NpgsqlCommand command = new NpgsqlCommand($"INSERT INTO newtable (name, age) VALUES (@n, @a)", con))
                 {
                     command.Parameters.AddWithValue("n", dataIns[0]);
-                    command.Parameters.AddWithValue("a", dataIns[1]);
+                    command.Parameters.AddWithValue("a", int.Parse(dataIns[1]));
 
                     int nRows = command.ExecuteNonQuery();
-                    Console.Out.WriteLine(String.Format("Number of rows inserted={0}", nRows));
-                    reply =String.Format("Number of rows inserted={0}", nRows);
+                    Console.WriteLine(String.Format("Number of rows inserted={0}", nRows));
+                    reply = String.Format("Number of rows inserted={0}", nRows);
                 }
             }
             catch (Exception ex)
             {
-                reply += ex.ToString();
+                reply = ex.Message;
             }
             return reply;
         }

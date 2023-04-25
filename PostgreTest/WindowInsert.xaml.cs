@@ -21,9 +21,11 @@ namespace PostgreTest
     /// </summary>
     public partial class WindowInsert : Window
     {
-        public WindowInsert()
+        public WindowInsert(string name)
         {
             InitializeComponent();
+            tbName.Text = name;
+            tbName.IsReadOnly = true;
         }
 
         void SendMessageFromSocket(int port)
@@ -45,9 +47,11 @@ namespace PostgreTest
             int bytesRec = sender.Receive(bytes);
 
             string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-
             MessageBox.Show(reply);
-            this.Close();
+            if (reply.Contains("inserted"))
+            {
+                this.Close();
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
