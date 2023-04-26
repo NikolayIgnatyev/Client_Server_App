@@ -52,7 +52,14 @@ namespace Server
                     switch (work)
                     {
                         case "SEARCH":
-                            reply = ConnectionDB.Search(dataDB);
+                            if(dataDB.Contains("IMAGE"))
+                            {
+                                handler.Send(ConnectionDB.SearchImage(dataDB));
+                            }
+                            else
+                            {
+                                reply = ConnectionDB.Search(dataDB);
+                            }
                             break;
                         case "INSERT":
                             if (dataDB.Contains("image"))

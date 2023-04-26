@@ -81,17 +81,20 @@ namespace PostgreTest
                 tblNick.Text = dataReply[2];
                 tblLevel.Text = dataReply[3];
                 tblSale.Text = dataReply[4];
-                Console.WriteLine(dataReply[4]);
                 if (dataReply[5] == "IMAGE")
                 {
                     Console.WriteLine(dataReply[5]);
-                    message = "IMAGE";
+                    message = $"SEARCH;IMAGE,{tbsender.Text}";
 
                     msg = Encoding.UTF8.GetBytes(message);
                     bytesSent = sender.Send(msg);
 
                     // Получаем ответ от сервера
                     bytesRec = sender.Receive(avatar);
+                    if(avatar != null)
+                    {
+                        Console.WriteLine("avatar not null");
+                    }
                     BitmapImage avatarImage = new BitmapImage();
                     avatarImage.BeginInit();
                     avatarImage.StreamSource = new System.IO.MemoryStream(avatar);

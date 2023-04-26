@@ -25,6 +25,23 @@ namespace Server
             con.Close();
         }
 
+        public static byte[] SearchImage(string data)
+        {
+            string[] strArr = data.Split(',');
+            data = strArr[1];
+            byte[] avatar = new byte[1024];
+            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE nickname='{data}';", con))
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    avatar = (byte[])reader[5];
+                }
+                reader.Close();
+            }
+            return avatar;
+        }
+
         public static string Search(string data)
         {
             string reply = "";
