@@ -63,7 +63,7 @@ namespace PostgreTest
             tbl1.Text = reply;
             if (reply.Contains("Error 404"))
             {
-                if (MessageBox.Show("Таких данных нет в таблице.\nХотите добавить?", "Нет данных", MessageBoxButton.OKCancel, MessageBoxImage.Error) == MessageBoxResult.OK)
+                if (MessageBox.Show("Таких данных нет в таблице.\nХотите добавить?", "Нет данных", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
                 {
                     WindowInsert windowInsert = new WindowInsert(tbsender.Text);
                     windowInsert.ShowDialog();

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PostgreTest"
         mc:Ignorable="d"
-        Title="Client" Height="93" Width="258">
+        Title="Client" Height="93" Width="258" WindowStartupLocation="CenterScreen">
     <Canvas>
         <TextBlock x:Name="tbl1" HorizontalAlignment="Left" Margin="10,31,0,0" TextWrapping="Wrap" Text="Info:" VerticalAlignment="Top"/>
         <Button Content="Send" HorizontalAlignment="Left" Margin="185,6,0,0" VerticalAlignment="Top" Height="24" Width="49" Click="ButtonData_Click"/>

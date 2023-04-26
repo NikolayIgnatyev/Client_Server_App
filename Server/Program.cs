@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Text;
-using Npgsql;
 using System.Net.Sockets;
 using System.Net;
 using System.IO;
@@ -47,22 +46,22 @@ namespace Server
                     string work = dataedit[0];
                     string dataDB = dataedit[1];
                     Console.WriteLine($"Входящие данные: {data}");
-                    CConnectionDB.OpenConnection();
+                    ConnectionDB.OpenConnection();
                     string reply = "";
                     switch (work)
                     {
                         case "search":
-                            reply = CConnectionDB.Search(dataDB);
+                            reply = ConnectionDB.Search(dataDB);
                             break;
                         case "insert":
-                            reply = CConnectionDB.Insert(dataDB);
+                            reply = ConnectionDB.Insert(dataDB);
                             break;
                     }
 
                     // Отправляем ответ клиенту\
                     byte[] msg = Encoding.UTF8.GetBytes(reply);
                     handler.Send(msg);
-                    CConnectionDB.CloseConncetion();
+                    ConnectionDB.CloseConncetion();
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();
                 }

@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Server
 {
-    public static class CConnectionDB
+    public static class ConnectionDB
     {
         readonly static string cs = "Host=localhost;Username=postgres;Password=123;Database=postgres";
         readonly static NpgsqlConnection con = new NpgsqlConnection(cs);
@@ -27,7 +27,7 @@ namespace Server
         public static string Search(string data)
         {
             string reply = "";
-            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM newtable WHERE name='{data}';", con))
+            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE name='{data}';", con))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -57,7 +57,7 @@ namespace Server
                 {
                     reply = ex.Message;
                 }
-                using (NpgsqlCommand command = new NpgsqlCommand($"INSERT INTO newtable (name, age) VALUES (@n, @a)", con))
+                using (NpgsqlCommand command = new NpgsqlCommand($"INSERT INTO people (name, age) VALUES (@n, @a)", con))
                 {
                     command.Parameters.AddWithValue("n", dataIns[0]);
                     command.Parameters.AddWithValue("a", int.Parse(dataIns[1]));

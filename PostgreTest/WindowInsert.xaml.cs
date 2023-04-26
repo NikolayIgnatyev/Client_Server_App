@@ -52,6 +52,10 @@ namespace PostgreTest
             {
                 this.Close();
             }
+            else
+            {
+                tbAge.Text = "";
+            }
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
