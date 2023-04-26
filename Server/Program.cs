@@ -39,6 +39,7 @@ namespace Server
                     // Мы дождались клиента, пытающегося с нами соединиться
 
                     byte[] bytes = new byte[1024];
+                    byte[] avatar = new byte[262144];
                     int bytesRec = handler.Receive(bytes);
 
                     data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
@@ -50,11 +51,21 @@ namespace Server
                     string reply = "";
                     switch (work)
                     {
-                        case "search":
+                        case "SEARCH":
                             reply = ConnectionDB.Search(dataDB);
                             break;
-                        case "insert":
-                            reply = ConnectionDB.Insert(dataDB);
+                        case "INSERT":
+                            if (dataDB.Contains("image"))
+                            {
+                                byte[] msgImage = Encoding.UTF8.GetBytes("NEED_IMAGE");
+                                handler.Send(msgImage);
+                                handler.Receive(avatar);
+                                reply = ConnectionDB.Insert(dataDB, avatar);
+                            }
+                            else
+                            {
+                                reply = ConnectionDB.InsertNotImage(dataDB);
+                            }
                             break;
                     }
 

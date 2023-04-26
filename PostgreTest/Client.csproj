@@ -167,6 +167,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converter.cs" />
     <Compile Include="WindowInsert.xaml.cs">
       <DependentUpon>WindowInsert.xaml</DependentUpon>
     </Compile>

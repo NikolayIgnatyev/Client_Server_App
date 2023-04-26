@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace PostgreTest
 {
@@ -24,8 +25,8 @@ namespace PostgreTest
         public WindowInsert(string name)
         {
             InitializeComponent();
-            tbName.Text = name;
-            tbName.IsReadOnly = true;
+            tbNickname.Text = name;
+            tbNickname.IsReadOnly = true;
         }
 
         void SendMessageFromSocket(int port)
@@ -37,24 +38,40 @@ namespace PostgreTest
 
             Socket sender = new Socket(ipAddr.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             sender.Connect(ipEndPoint);
+            byte[] avatarByte = null;
+            string message = null;
+            if (imgAvatar.Source != null)
+            {
+                avatarByte = Converter.ConvertFromImage(imgAvatar.Source as BitmapImage);
+                message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text},image";
+            }
+            else
+            {
+                message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text}";
+            }
 
-            string message = "insert;" + tbName.Text + "," + tbAge.Text;
 
             byte[] msg = Encoding.UTF8.GetBytes(message);
+
             int bytesSent = sender.Send(msg);
 
             // Получаем ответ от сервера
             int bytesRec = sender.Receive(bytes);
 
             string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-            MessageBox.Show(reply);
+            if (reply.Contains("NEED_IMAGE"))
+            {
+                sender.Send(avatarByte);
+            }
+            Console.WriteLine(reply);
             if (reply.Contains("inserted"))
             {
+                MessageBox.Show("Inserted complete");
                 this.Close();
             }
             else
             {
-                tbAge.Text = "";
+                MessageBox.Show(reply);
             }
         }
 
@@ -71,6 +88,19 @@ namespace PostgreTest
             finally
             {
                 Console.ReadLine();
+            }
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog op = new OpenFileDialog();
+            op.Title = "Select a picture";
+            op.Filter = "All supported graphics|*.jpg;*.jpeg;*.png|" +
+              "JPEG (*.jpg;*.jpeg)|*.jpg;*.jpeg|" +
+              "Portable Network Graphic (*.png)|*.png";
+            if (op.ShowDialog() == true)
+            {
+                imgAvatar.Source = new BitmapImage(new Uri(op.FileName));
             }
         }
     }
