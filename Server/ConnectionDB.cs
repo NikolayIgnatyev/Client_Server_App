@@ -30,12 +30,13 @@ namespace Server
             string[] strArr = data.Split(',');
             data = strArr[1];
             byte[] avatar = new byte[1024];
-            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE nickname='{data}';", con))
+            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT avatar FROM people WHERE nickname='{data}';", con))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    avatar = (byte[])reader[5];
+                    Console.WriteLine(reader[0]);
+                    avatar = (byte[])reader[0];
                 }
                 reader.Close();
             }
@@ -52,12 +53,16 @@ namespace Server
                 while (reader.Read())
                 {
                     reply = ($"{reader.GetString(0)},{reader.GetInt32(1)},{reader.GetString(2)},{reader.GetInt32(3)},{reader.GetInt32(4)}");
-                    avatar = (byte[])reader[5];
+                    avatar = (byte[])reader.GetValue(5);
+                    
                 }
                 reader.Close();
-                if(avatar != null)
+                Console.WriteLine($"{avatar[0]} {avatar[1]} {avatar[2]}");
+                if (avatar[0] != 0)
                 {
+                    Console.WriteLine(avatar.Length);
                     reply += ",IMAGE";
+                    Console.WriteLine(reply);
                 }
                 if (reply == "")
                 {

@@ -54,9 +54,9 @@ namespace Server
                         case "SEARCH":
                             if(dataDB.Contains("IMAGE"))
                             {
-                                handler.Send(ConnectionDB.SearchImage(dataDB));
+                                avatar = ConnectionDB.SearchImage(dataDB);
+                                handler.Send(avatar);
                             }
-                            else
                             {
                                 reply = ConnectionDB.Search(dataDB);
                             }

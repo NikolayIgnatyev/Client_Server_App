@@ -91,10 +91,6 @@ namespace PostgreTest
 
                     // Получаем ответ от сервера
                     bytesRec = sender.Receive(avatar);
-                    if(avatar != null)
-                    {
-                        Console.WriteLine("avatar not null");
-                    }
                     BitmapImage avatarImage = new BitmapImage();
                     avatarImage.BeginInit();
                     avatarImage.StreamSource = new System.IO.MemoryStream(avatar);

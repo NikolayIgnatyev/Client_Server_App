@@ -63,6 +63,9 @@ namespace PostgreTest
             {
                 sender.Send(avatarByte);
             }
+            bytesRec = sender.Receive(bytes);
+
+            reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
             Console.WriteLine(reply);
             if (reply.Contains("inserted"))
             {
