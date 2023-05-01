@@ -49,6 +49,7 @@ namespace Server
                     Console.WriteLine($"Входящие данные: {data}");
                     ConnectionDB.OpenConnection();
                     string reply = "";
+                    byte[] msg;
                     switch (work)
                     {
                         case "SEARCH":
@@ -56,13 +57,21 @@ namespace Server
                             {
                                 avatar = ConnectionDB.SearchImage(dataDB);
                                 handler.Send(avatar);
+                                Console.WriteLine($"Отправленые данные1123: {reply}");
                             }
+                            else
                             {
                                 reply = ConnectionDB.Search(dataDB);
-                            }
+                                msg = Encoding.UTF8.GetBytes(reply);
+                                handler.Send(msg);
+                                Console.WriteLine($"Отправленые данные: {reply}");
+                            }             
+                            
+
                             break;
+
                         case "INSERT":
-                            if (dataDB.Contains("image"))
+                            if (dataDB.Contains("INSIMAGE"))
                             {
                                 byte[] msgImage = Encoding.UTF8.GetBytes("NEED_IMAGE");
                                 handler.Send(msgImage);
@@ -73,12 +82,13 @@ namespace Server
                             {
                                 reply = ConnectionDB.InsertNotImage(dataDB);
                             }
+                            Console.WriteLine($"Отправленые данные: {reply}");
+                            msg = Encoding.UTF8.GetBytes(reply);
+                            handler.Send(msg);
                             break;
                     }
 
                     // Отправляем ответ клиенту\
-                    byte[] msg = Encoding.UTF8.GetBytes(reply);
-                    handler.Send(msg);
                     ConnectionDB.CloseConncetion();
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();

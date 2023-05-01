@@ -35,7 +35,6 @@ namespace Server
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    Console.WriteLine(reader[0]);
                     avatar = (byte[])reader[0];
                 }
                 reader.Close();
@@ -57,12 +56,9 @@ namespace Server
                     
                 }
                 reader.Close();
-                Console.WriteLine($"{avatar[0]} {avatar[1]} {avatar[2]}");
                 if (avatar[0] != 0)
                 {
-                    Console.WriteLine(avatar.Length);
                     reply += ",IMAGE";
-                    Console.WriteLine(reply);
                 }
                 if (reply == "")
                 {

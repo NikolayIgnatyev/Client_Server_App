@@ -43,7 +43,7 @@ namespace PostgreTest
             if (imgAvatar.Source != null)
             {
                 avatarByte = Converter.ConvertFromImage(imgAvatar.Source as BitmapImage);
-                message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text},image";
+                message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text},INSIMAGE";
             }
             else
             {
@@ -58,16 +58,19 @@ namespace PostgreTest
             // Получаем ответ от сервера
             int bytesRec = sender.Receive(bytes);
 
+
             string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+
             if (reply.Contains("NEED_IMAGE"))
             {
                 sender.Send(avatarByte);
-            }
-            bytesRec = sender.Receive(bytes);
+                bytesRec = sender.Receive(bytes);
 
-            reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-            Console.WriteLine(reply);
-            if (reply.Contains("inserted"))
+                reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                Console.WriteLine(reply);
+            }
+
+            else if (reply.Contains("inserted"))
             {
                 MessageBox.Show("Inserted complete");
                 this.Close();

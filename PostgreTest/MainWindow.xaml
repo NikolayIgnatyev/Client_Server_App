@@ -5,21 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PostgreTest"
         mc:Ignorable="d"
-        Title="Client" Height="176" Width="369">
+        Title="Client" Height="290" Width="360">
     <Canvas>
-        <TextBlock HorizontalAlignment="Center" TextWrapping="Wrap" Text="Name:" VerticalAlignment="Center" Canvas.Left="120" Canvas.Top="38" Height="16"/>
+        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Name:" VerticalAlignment="Top" Canvas.Left="220" Canvas.Top="33" Height="20" Width="67"/>
         <Button Content="Send" HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="49" Click="ButtonData_Click" Canvas.Left="190" Canvas.Top="6"/>
         <TextBox x:Name="tbsender" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="24" Canvas.Left="65" Canvas.Top="6"/>
         <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Nickame: " VerticalAlignment="Top" Width="50" Canvas.Left="10" Canvas.Top="10"/>
-        <TextBlock TextWrapping="Wrap" Text="Age: " Canvas.Left="120" Canvas.Top="59" HorizontalAlignment="Center" VerticalAlignment="Center" Height="16"/>
-        <TextBlock TextWrapping="Wrap" Text="Nickname: " Canvas.Left="120" Canvas.Top="80" HorizontalAlignment="Center" VerticalAlignment="Center" Height="16"/>
-        <TextBlock TextWrapping="Wrap" Text="Level: " Canvas.Left="120" Canvas.Top="101" HorizontalAlignment="Center" VerticalAlignment="Top" Height="16"/>
-        <TextBlock TextWrapping="Wrap" Text="Sale: " Canvas.Left="120" Canvas.Top="122" HorizontalAlignment="Center" VerticalAlignment="Top" Height="16"/>
-        <Image x:Name="imgAvatar" Height="100" Canvas.Left="10" Canvas.Top="38" Width="100"/>
-        <TextBlock x:Name="tblName" Canvas.Left="184" TextWrapping="Wrap" Text="" Canvas.Top="38" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock x:Name="tblAge" Canvas.Left="184" TextWrapping="Wrap" Text="" Canvas.Top="59" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock x:Name="tblNick" Canvas.Left="184" TextWrapping="Wrap" Text="" Canvas.Top="80" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock x:Name="tblLevel" Canvas.Left="184" TextWrapping="Wrap" Text="" Canvas.Top="101" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-        <TextBlock x:Name="tblSale" Canvas.Left="184" TextWrapping="Wrap" Text="" Canvas.Top="122" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBlock TextWrapping="Wrap" Text="Age: " Canvas.Left="220" Canvas.Top="59" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="53"/>
+        <TextBlock TextWrapping="Wrap" Text="Nickname: " Canvas.Left="220" Canvas.Top="86" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="115"/>
+        <TextBlock TextWrapping="Wrap" Text="Level: " Canvas.Left="220" Canvas.Top="112" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="64"/>
+        <TextBlock TextWrapping="Wrap" Text="Sale: " Canvas.Left="220" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="54"/>
+        <Border BorderThickness="1" BorderBrush="Black" Canvas.Left="10" Canvas.Top="38">
+            <Image x:Name="imgAvatar" Height="200" Width="200" Stretch="Fill"/>
+        </Border>
+        
+        <TextBlock x:Name="tblName" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="33" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
+        <TextBlock x:Name="tblAge" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="59" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
+        <TextBlock x:Name="tblNick" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="86" HorizontalAlignment="Left" VerticalAlignment="Center" Height="19" Width="30"/>
+        <TextBlock x:Name="tblLevel" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="112" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
+        <TextBlock x:Name="tblSale" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
     </Canvas>
 </Window>

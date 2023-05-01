@@ -33,11 +33,10 @@ namespace PostgreTest
             InitializeComponent();
         }
 
-        void SendMessageFromSocket(int port)
+         (byte[] bytes, int bytesRec) SendMessageFromSocket(int port, string message)
         {
             // Буфер для входящих данных
-            byte[] bytes = new byte[1024];
-            byte[] avatar = new byte[262144];
+            byte[] bytes = new byte[262144];
 
             // Соединяемся с удаленным устройством
 
@@ -51,8 +50,6 @@ namespace PostgreTest
             // Соединяем сокет с удаленной точкой
             sender.Connect(ipEndPoint);
 
-            string message = "SEARCH;" + tbsender.Text;
-
             byte[] msg = Encoding.UTF8.GetBytes(message);
 
             // Отправляем данные через сокет
@@ -61,53 +58,61 @@ namespace PostgreTest
             // Получаем ответ от сервера
             int bytesRec = sender.Receive(bytes);
 
-            string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-
-
-            if (reply.Contains("Error 404"))
-            {
-                if (MessageBox.Show("Таких данных нет в таблице.\nХотите добавить?", "Нет данных", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
-                {
-                    WindowInsert windowInsert = new WindowInsert(tbsender.Text);
-                    windowInsert.ShowDialog();
-                }
-            }
-            else
-            {
-                
-                string[] dataReply = reply.Split(',');
-                tblName.Text = dataReply[0];
-                tblAge.Text = dataReply[1];
-                tblNick.Text = dataReply[2];
-                tblLevel.Text = dataReply[3];
-                tblSale.Text = dataReply[4];
-                if (dataReply[5] == "IMAGE")
-                {
-                    Console.WriteLine(dataReply[5]);
-                    message = $"SEARCH;IMAGE,{tbsender.Text}";
-
-                    msg = Encoding.UTF8.GetBytes(message);
-                    bytesSent = sender.Send(msg);
-
-                    // Получаем ответ от сервера
-                    bytesRec = sender.Receive(avatar);
-                    BitmapImage avatarImage = new BitmapImage();
-                    avatarImage.BeginInit();
-                    avatarImage.StreamSource = new System.IO.MemoryStream(avatar);
-                    avatarImage.EndInit();
-                    imgAvatar.Source = avatarImage;
-                }
-            }
             // Освобождаем сокет
             sender.Shutdown(SocketShutdown.Both);
             sender.Close();
+            return (bytes, bytesRec);
         }
 
         private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
+            string reply = "";
+            byte[] bytes = new byte[262144];
+            int bytesRec;
             try
             {
-                SendMessageFromSocket(11000);
+                bytes = SendMessageFromSocket(11000, "SEARCH;" + tbsender.Text).bytes;
+                bytesRec = SendMessageFromSocket(11000, "SEARCH;" + tbsender.Text).bytesRec;
+                reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                if (reply.Contains("Error 404"))
+                {
+                    if (MessageBox.Show("Таких данных нет в таблице.\nХотите добавить?", "Нет данных", MessageBoxButton.OKCancel, MessageBoxImage.Question) == MessageBoxResult.OK)
+                    {
+                        WindowInsert windowInsert = new WindowInsert(tbsender.Text);
+                        windowInsert.ShowDialog();
+                    }
+                }
+                else
+                {
+                    byte[] avatar = new byte[262144];
+                    string[] dataReply = reply.Split(',');
+                    tblName.Text = dataReply[0];
+                    tblAge.Text = dataReply[1];
+                    tblNick.Text = dataReply[2];
+                    tblLevel.Text = dataReply[3];
+                    tblSale.Text = dataReply[4];
+                    if (dataReply[5] == "IMAGE")
+                    {
+
+                        try
+                        {
+                            avatar = SendMessageFromSocket(11000, "SEARCH;IMAGE," + tbsender.Text).bytes;
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.ToString());
+                        }
+                        finally
+                        {
+                            Console.ReadLine();
+                        }
+                        BitmapImage avatarImage = new BitmapImage();
+                        avatarImage.BeginInit();
+                        avatarImage.StreamSource = new System.IO.MemoryStream(avatar);
+                        avatarImage.EndInit();
+                        imgAvatar.Source = avatarImage;
+                    }
+                }
             }
             catch (Exception ex)
             {
