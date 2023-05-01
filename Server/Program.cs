@@ -57,7 +57,7 @@ namespace Server
                             {
                                 avatar = ConnectionDB.SearchImage(dataDB);
                                 handler.Send(avatar);
-                                Console.WriteLine($"Отправленые данные1123: {reply}");
+                                Console.WriteLine($"Отправленые данные: {reply}");
                             }
                             else
                             {
@@ -66,8 +66,6 @@ namespace Server
                                 handler.Send(msg);
                                 Console.WriteLine($"Отправленые данные: {reply}");
                             }             
-                            
-
                             break;
 
                         case "INSERT":
@@ -81,14 +79,20 @@ namespace Server
                             else
                             {
                                 reply = ConnectionDB.InsertNotImage(dataDB);
-                            }
-                            Console.WriteLine($"Отправленые данные: {reply}");
+                            } 
                             msg = Encoding.UTF8.GetBytes(reply);
                             handler.Send(msg);
+                            Console.WriteLine($"Отправленые данные: {reply}");
+                            break;
+
+                        case "COLUMN_NAME":
+                            reply = ConnectionDB.GetColumnName();
+                            msg = Encoding.UTF8.GetBytes(reply);
+                            handler.Send(msg);
+                            Console.WriteLine($"Отправленые данные: {reply}");
                             break;
                     }
 
-                    // Отправляем ответ клиенту\
                     ConnectionDB.CloseConncetion();
                     handler.Shutdown(SocketShutdown.Both);
                     handler.Close();

@@ -25,8 +25,6 @@ namespace PostgreTest
         public WindowInsert(string name)
         {
             InitializeComponent();
-            tbNickname.Text = name;
-            tbNickname.IsReadOnly = true;
         }
 
         void SendMessageFromSocket(int port)

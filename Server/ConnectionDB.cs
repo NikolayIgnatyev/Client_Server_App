@@ -28,9 +28,10 @@ namespace Server
         public static byte[] SearchImage(string data)
         {
             string[] strArr = data.Split(',');
-            data = strArr[1];
+            string columnName = strArr[1];
+            data = strArr[2];
             byte[] avatar = new byte[1024];
-            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT avatar FROM people WHERE nickname='{data}';", con))
+            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT avatar FROM people WHERE {columnName}='{data}';", con))
             {
                 var reader = command.ExecuteReader();
                 while (reader.Read())
@@ -44,8 +45,12 @@ namespace Server
 
         public static string Search(string data)
         {
+            string[] strArr = data.Split(',');
+            string columnName = strArr[0];
+            data = strArr[1];
+            Console.WriteLine($"{columnName},{data}");
             string reply = "";
-            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE nickname='{data}';", con))
+            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE {columnName}='{data}';", con))
             {
                 byte[] avatar = new byte[1024];
                 var reader = command.ExecuteReader();
@@ -133,6 +138,29 @@ namespace Server
                     int nRows = command.ExecuteNonQuery();
                     Console.WriteLine(String.Format("Number of rows inserted={0}", nRows));
                     reply = String.Format("Number of rows inserted={0}", nRows);
+                }
+            }
+            catch (Exception ex)
+            {
+                reply = ex.Message;
+            }
+            return reply;
+        }
+
+        internal static string GetColumnName()
+        {
+            string reply = "";
+            try
+            {
+                using (NpgsqlCommand command = new NpgsqlCommand($"SELECT column_name FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='people'", con))
+                {
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        reply += $"{reader.GetString(0)},";
+
+                    }
+                    reader.Close();
                 }
             }
             catch (Exception ex)

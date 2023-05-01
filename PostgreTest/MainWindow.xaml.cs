@@ -28,12 +28,18 @@ namespace PostgreTest
     /// 
     public partial class MainWindow : Window
     {
+        string reply;
+        byte[] bytes = new byte[262144];
+        int bytesRec;
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
-         (byte[] bytes, int bytesRec) SendMessageFromSocket(int port, string message)
+
+
+        public (byte[] bytes, int bytesRec) SendMessageFromSocket(int port, string message)
         {
             // Буфер для входящих данных
             byte[] bytes = new byte[262144];
@@ -66,13 +72,11 @@ namespace PostgreTest
 
         private void ButtonData_Click(object sender, RoutedEventArgs e)
         {
-            string reply = "";
-            byte[] bytes = new byte[262144];
-            int bytesRec;
             try
             {
-                bytes = SendMessageFromSocket(11000, "SEARCH;" + tbsender.Text).bytes;
-                bytesRec = SendMessageFromSocket(11000, "SEARCH;" + tbsender.Text).bytesRec;
+                Console.WriteLine(cbColumnName.SelectedItem.ToString());
+                bytes = SendMessageFromSocket(11000, "SEARCH;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text).bytes;
+                bytesRec = SendMessageFromSocket(11000, "SEARCH;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text).bytesRec;
                 reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
                 if (reply.Contains("Error 404"))
                 {
@@ -96,7 +100,7 @@ namespace PostgreTest
 
                         try
                         {
-                            avatar = SendMessageFromSocket(11000, "SEARCH;IMAGE," + tbsender.Text).bytes;
+                            avatar = SendMessageFromSocket(11000, "SEARCH;IMAGE," + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text).bytes;
                         }
                         catch (Exception ex)
                         {
@@ -122,6 +126,19 @@ namespace PostgreTest
             {
                 Console.ReadLine();
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            bytes = SendMessageFromSocket(11000, "COLUMN_NAME;null").bytes;
+            bytesRec = SendMessageFromSocket(11000, "COLUMN_NAME;null").bytesRec;
+            reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+            string[] dataReply = reply.Split(',');
+            for (int i = 0; i < dataReply.Length - 1; i++)
+            {
+                cbColumnName.Items.Add(dataReply[i]);
+            }
+            cbColumnName.SelectedIndex = 0;
         }
     }
 }
