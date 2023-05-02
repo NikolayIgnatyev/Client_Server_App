@@ -43,7 +43,7 @@ namespace ClientServerApp
             {
                 try
                 {
-                    (bytes, bytesRec) = Sender.SendMessageFromSocket("SEARCH;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text);
+                    (bytes, bytesRec) = Sender.SendMessageFromSocket("SEARCHNOTIMAGE;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text);
                     reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
                     if (reply.Contains("Error 404"))
                     {
@@ -55,34 +55,42 @@ namespace ClientServerApp
                     }
                     else
                     {
-                        byte[] avatar = new byte[262144];
-                        string[] dataReply = reply.Split(',');
-                        tblName.Text = dataReply[0];
-                        tblAge.Text = dataReply[1];
-                        tblNick.Text = dataReply[2];
-                        tblLevel.Text = dataReply[3];
-                        tblSale.Text = dataReply[4];
-                        if (reply.Contains("IMAGE"))
+                        lstVw.Items.Clear();
+                        byte[] avatar = new byte[2097152];
+                        string[] dataReply = reply.Split(';');
+                        for (int i = 0; i < dataReply.Length; i++)
                         {
-                            try
-                            {
-                                avatar = Sender.SendMessageFromSocket("SEARCHIMAGE;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text).bytes;
-                            }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex.ToString());
-                            }
-                            finally
-                            {
-                                Console.ReadLine();
-                            }
-                            BitmapImage avatarImage = new BitmapImage();
-                            avatarImage.BeginInit();
-                            avatarImage.StreamSource = new MemoryStream(avatar);
-                            avatarImage.EndInit();
-                            imgAvatar.Source = avatarImage;
+                            string[] user = dataReply[i].Split(',');
+                            lstVw.Items.Add(new User { Name = user[0], Age = user[1], Nickname = user[2], Level = user[3], Discount = user[4] });
                         }
                     }
+
+                        //if (reply.Contains("IMAGE"))
+                        //{
+                        //    Console.WriteLine("get image");
+                        //    try
+                        //    {
+                        //        avatar = Sender.SendMessageFromSocket("SEARCHIMAGE;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text).bytes;
+                        //    }
+                        //    catch (Exception ex)
+                        //    {
+                        //        Console.WriteLine(ex.ToString());
+                        //    }
+                        //    finally
+                        //    {
+                        //        Console.ReadLine();
+                        //    }
+                        //    BitmapImage avatarImage = new BitmapImage();
+                        //    avatarImage.BeginInit();
+                        //    avatarImage.StreamSource = new MemoryStream(avatar);
+                        //    avatarImage.EndInit();
+                        //    imgAvatar.Source = avatarImage;
+                        //}
+                        //else
+                        //{
+                        //    imgAvatar.Source = Converter.ConvertToBitmapImage(Properties.Resources.ImageNotFound);
+                        //}
+                    
                 }
                 catch (Exception ex)
                 {
@@ -97,15 +105,33 @@ namespace ClientServerApp
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            (bytes, bytesRec) = Sender.SendMessageFromSocket("COLUMN_NAME;null");
-            reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-            string[] dataReply = reply.Split(',');
-            Array.Reverse(dataReply);
-            for (int i = 1; i < dataReply.Length; i++)
+            try
             {
-                cbColumnName.Items.Add(dataReply[i]);
+                (bytes, bytesRec) = Sender.SendMessageFromSocket("COLUMN_NAME;null");
+                reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                string[] dataReply = reply.Split(',');
+                Array.Reverse(dataReply);
+                for (int i = 1; i < dataReply.Length; i++)
+                {
+                    if (!dataReply[i].Contains("avatar"))
+                    {
+                        cbColumnName.Items.Add(dataReply[i]);
+                    }
+                }
+                cbColumnName.SelectedIndex = 0;
             }
-            cbColumnName.SelectedIndex = 0;
+            catch (Exception ex)
+            {
+                if (MessageBox.Show(ex.Message + "\nПовторить попытку подлючения?", "Error", MessageBoxButton.YesNo, MessageBoxImage.Error)
+                    == MessageBoxResult.Yes)
+                {
+                    Window_Loaded(this, null);
+                }
+                else
+                {
+                    this.Close();
+                }
+            }
         }
     }
 }

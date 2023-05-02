@@ -54,15 +54,39 @@ namespace ClientServerApp
             return (bytes, bytesRec);
         }
 
+        public static (byte[] bytes, int bytesRec) SendMessageFromOneSocket(string message)
+        {
+            // Кодирование входящих данных в byte[]
+            byte[] msg = Encoding.UTF8.GetBytes(message);
+
+            // Отправляем данные через сокет
+            int bytesSent = sender.Send(msg);
+
+            // Получаем ответ от сервера
+            int bytesRec = sender.Receive(bytes);
+            return (bytes, bytesRec);
+        }
+
 
         public static (byte[] bytes, int bytesRec) SendMessageFromSocket(byte[] message)
         {
+            OpenSocketConnection(11000);
             // Отправляем данные через сокет
             int bytesSent = sender.Send(message);
 
             // Получаем ответ от сервера
             int bytesRec = sender.Receive(bytes);
             CloseSocketConnection();
+            return (bytes, bytesRec);
+        }
+
+        public static (byte[] bytes, int bytesRec) SendMessageFromOneSocket(byte[] message)
+        {
+            // Отправляем данные через сокет
+            int bytesSent = sender.Send(message);
+
+            // Получаем ответ от сервера
+            int bytesRec = sender.Receive(bytes);
             return (bytes, bytesRec);
         }
     }

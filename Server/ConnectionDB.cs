@@ -30,7 +30,7 @@ namespace Server
             string[] strArr = data.Split(',');
             string columnName = strArr[0];
             data = strArr[1];
-            byte[] avatar = new byte[1024];
+            byte[] avatar = new byte[2097152];
             using (NpgsqlCommand command = new NpgsqlCommand($"SELECT avatar FROM people WHERE {columnName}='{data}';", con))
             {
                 var reader = command.ExecuteReader();
@@ -56,14 +56,40 @@ namespace Server
                 while (reader.Read())
                 {
                     reply = ($"{reader.GetString(0)},{reader.GetInt32(1)},{reader.GetString(2)},{reader.GetInt32(3)},{reader.GetInt32(4)}");
-                    avatar = (byte[])reader.GetValue(5);
-                    
+                    if(reader.GetValue(5) != DBNull.Value)
+                    {
+                        avatar = (byte[])reader.GetValue(5);
+                    }
+                   
                 }
                 reader.Close();
                 if (avatar[0] != 0)
                 {
                     reply += ",IMAGE";
                 }
+                if (reply == "")
+                {
+                    reply = "Error 404 Not Found!";
+                }
+            }
+            return reply;
+        }
+
+        public static string SearchNotImage(string data)
+        {
+            string[] strArr = data.Split(',');
+            string columnName = strArr[0];
+            data = strArr[1];
+            string reply = "";
+            using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE {columnName}='{data}';", con))
+            {
+                byte[] avatar = new byte[1024];
+                var reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    reply += ($"{reader.GetString(0)},{reader.GetInt32(1)},{reader.GetString(2)},{reader.GetInt32(3)},{reader.GetInt32(4)};");
+                }
+                reader.Close();
                 if (reply == "")
                 {
                     reply = "Error 404 Not Found!";

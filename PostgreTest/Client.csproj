@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{E1BC549F-4BF6-43DD-9B7C-4C754F9FEFFC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>PostgreTest</RootNamespace>
-    <AssemblyName>PostgreTest</AssemblyName>
+    <RootNamespace>ClientServerApp</RootNamespace>
+    <AssemblyName>ClientServerApp</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -121,6 +121,7 @@
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=6.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.6.0.0\lib\net461\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Memory, Version=4.0.1.2, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.5\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -168,7 +169,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter.cs" />
+    <Compile Include="GridViewColumnResize.cs" />
     <Compile Include="Sender.cs" />
+    <Compile Include="User.cs" />
     <Compile Include="WindowInsert.xaml.cs">
       <DependentUpon>WindowInsert.xaml</DependentUpon>
     </Compile>
@@ -216,6 +219,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ImageNotFound.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets" Condition="Exists('..\packages\Microsoft.Extensions.Logging.Abstractions.6.0.0\build\Microsoft.Extensions.Logging.Abstractions.targets')" />

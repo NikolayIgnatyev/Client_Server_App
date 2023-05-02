@@ -24,6 +24,9 @@ namespace ClientServerApp
     /// </summary>
     public partial class WindowInsert : Window
     {
+        int bytesRec;
+        byte[] bytes = new byte[262144];
+
         public WindowInsert(string text, string columnName)
         {
             InitializeComponent();
@@ -56,54 +59,74 @@ namespace ClientServerApp
             }
         }
 
+        private bool IsUnion(string key)
+        {
+            string message = $"SEARCH;nickname,{key}";
+            (bytes, bytesRec) = Sender.SendMessageFromSocket(message);
+            string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+            if(reply.Contains("Error 404"))
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
+            if (tbName.Text != "" & tbNickname.Text != "" & tbAge.Text != "")
             {
-                string name, nickname;
-                int age, sale, level;
-
-
-                byte[] avatarByte = new byte[262144];
-                string message = null;
-                int bytesRec;
-                byte[] bytes = new byte[262144];
-
-                if (imgAvatar.Source != null)
+                try
                 {
-                    avatarByte = Converter.ConvertFromImage(imgAvatar.Source as BitmapImage);
-                    message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text},INSIMAGE";
+                    if (!IsUnion(tbNickname.Text))
+                    {
+                        MessageBox.Show("Данный ник уже занят!");
+                        return;
+                    }
+                    Sender.OpenSocketConnection(11000);
+                    byte[] avatarByte = new byte[2097152];
+                    string message = null;
+
+                    if (imgAvatar.Source != null)
+                    {
+                        avatarByte = Converter.ConvertFromImage(imgAvatar.Source as BitmapImage);
+                        message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text},INSIMAGE";
+                    }
+                    else
+                    {
+                        message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text}";
+                    }
+                    
+                    (bytes, bytesRec) = Sender.SendMessageFromOneSocket(message);
+                    string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+
+                    if (reply.Contains("NEED_IMAGE"))
+                    {
+                        (bytes, bytesRec) = Sender.SendMessageFromOneSocket(avatarByte);
+                        reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                        Console.WriteLine(reply);
+                    }
+                    if (reply.Contains("INSERTED"))
+                    {
+                        MessageBox.Show("Inserted complete");
+                        Sender.CloseSocketConnection();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show(reply);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    message = $"INSERT;{tbName.Text},{tbAge.Text},{tbNickname.Text},{tbLevel.Text},{tbSale.Text}";
-                }
-                (bytes, bytesRec) = Sender.SendMessageFromSocket( message);
-                string reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-
-                if (reply.Contains("NEED_IMAGE"))
-                {
-                    (bytes, bytesRec) = Sender.SendMessageFromSocket(avatarByte);
-                    reply = Encoding.UTF8.GetString(bytes, 0, bytesRec);
-                }
-
-                else if (reply.Contains("INSERTED"))
-                {
-                    MessageBox.Show("Inserted complete");
-                    this.Close();
-                }
-                else
-                {
-                    MessageBox.Show(reply);
+                    MessageBox.Show(ex.ToString());
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.ToString());
-            }
-            finally
-            {
-                Console.ReadLine();
+                MessageBox.Show("Заполните обязательные поля!");
             }
         }
 

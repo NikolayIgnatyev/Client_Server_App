@@ -8,7 +8,7 @@ namespace Server
 {
     internal class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
             // Устанавливаем для сокета локальную конечную точку
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
@@ -38,7 +38,7 @@ namespace Server
                     // Мы дождались клиента, пытающегося с нами соединиться
 
                     byte[] bytes = new byte[1024];
-                    byte[] avatar = new byte[262144];
+                    byte[] avatar = new byte[2097152];
                     int bytesRec = handler.Receive(bytes);
 
                     data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
@@ -59,10 +59,16 @@ namespace Server
                             break;
 
                         case "SEARCHIMAGE":
-                            Console.WriteLine("SEARCHIMAGE");
                             avatar = ConnectionDB.SearchImage(dataDB);
                             handler.Send(avatar);
                             Console.WriteLine($"Отправленые данные: image");
+                            break;
+
+                        case "SEARCHNOTIMAGE":
+                            reply = ConnectionDB.SearchNotImage(dataDB);
+                            msg = Encoding.UTF8.GetBytes(reply);
+                            handler.Send(msg);
+                            Console.WriteLine($"Отправленые данные: {reply}");
                             break;
 
                         case "INSERT":

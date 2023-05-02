@@ -3,26 +3,73 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:ClientServerApp"
+        xmlns:Behaviours ="clr-namespace:ClientServerApp"
         mc:Ignorable="d"
-        Title="ClientApp" Height="290" Width="360" Loaded="Window_Loaded" >
-    <Canvas>
-        <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="Name:" VerticalAlignment="Top" Canvas.Left="220" Canvas.Top="33" Height="20" Width="67"/>
-        <Button Content="Send" HorizontalAlignment="Center" VerticalAlignment="Top" Height="24" Width="50" Click="ButtonData_Click" Canvas.Left="258" Canvas.Top="5"/>
-        <TextBox x:Name="tbsender" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Height="24" Canvas.Left="134" Canvas.Top="5"/>
-        <TextBlock TextWrapping="Wrap" Text="Age: " Canvas.Left="220" Canvas.Top="59" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="53"/>
-        <TextBlock TextWrapping="Wrap" Text="Nickname: " Canvas.Left="220" Canvas.Top="86" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="115"/>
-        <TextBlock TextWrapping="Wrap" Text="Level: " Canvas.Left="220" Canvas.Top="112" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="64"/>
-        <TextBlock TextWrapping="Wrap" Text="Sale: " Canvas.Left="220" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Top" Height="20" Width="54"/>
-        <Border BorderThickness="1" BorderBrush="Black" Canvas.Left="10" Canvas.Top="38">
-            <Image x:Name="imgAvatar" Height="200" Width="200" Stretch="Fill"/>
-        </Border>
+        Title="ClientApp" Height="300" Width="950" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Horizontal">
+            <ComboBox x:Name="cbColumnName" Width="120" Margin="15,5,1,5" FontSize="18"/>
+            <TextBox x:Name="tbsender" Width="120" Margin="1,5,1,5" FontSize="18"/>
+            <Button Content="Send"  Width="50" Click="ButtonData_Click" Margin="1,5,3,5" FontSize="18"/>
+        </StackPanel>
+        <ListView Name="lstVw" Margin="15,5,5,15" Grid.Column="0" Grid.Row="1" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" FontSize="18" Behaviours:GridViewColumnResize.Enabled="True">
+            <ListView.View>
+                <GridView>
+                    <GridView.Columns>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Path=Name}" Behaviours:GridViewColumnResize.Width="*1"/>
+                        <GridViewColumn Header="Age" DisplayMemberBinding="{Binding Path=Age}" Behaviours:GridViewColumnResize.Width="*1"/>
+                        <GridViewColumn Header="Nickname" DisplayMemberBinding="{Binding Path=Nickname}" Behaviours:GridViewColumnResize.Width="*1"/>
+                        <GridViewColumn Header="Discount" DisplayMemberBinding="{Binding Path=Discount}" Behaviours:GridViewColumnResize.Width="*1"/>
+                        <GridViewColumn Header="Level" DisplayMemberBinding="{Binding Path=Level}" Behaviours:GridViewColumnResize.Width="*1"/>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Center" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+        <Grid Grid.Row="1" Grid.Column="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="230"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="200"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Column="0">
+                <TextBlock DockPanel.Dock="Top" Text="Name:" TextAlignment="Right" Margin="0,0,1,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" Text="Age: " TextAlignment="Right" Margin="0,0,1,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" Text="Nickname: " TextAlignment="Right" Margin="0,0,1,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" Text="Level: " TextAlignment="Right" Margin="0,0,1,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" Text="Sale: " TextAlignment="Right" Margin="0,0,1,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Bottom"></TextBlock>
+            </DockPanel>
+            <DockPanel Grid.Column="1">
+                <TextBlock DockPanel.Dock="Top" x:Name="tblName" Text="" Margin="1,0,3,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" x:Name="tblAge" Text="" Margin="1,0,3,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" x:Name="tblNick" Text="" Margin="1,0,3,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" x:Name="tblLevel" Text="" Margin="1,0,3,0" FontSize="26"/>
+                <TextBlock DockPanel.Dock="Top" x:Name="tblSale" Text="" Margin="1,0,3,0" FontSize="26"/>
+                <TextBlock></TextBlock>
+            </DockPanel>
+            <DockPanel LastChildFill="True" Grid.Column="2" Margin="0,0,30,0">
+                <Border BorderThickness="1" BorderBrush="Black">
+                    <Image x:Name="imgAvatar" Stretch="Fill"/>
+                </Border>
+            </DockPanel>
+        </Grid>
 
-        <TextBlock x:Name="tblName" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="33" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
-        <TextBlock x:Name="tblAge" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="59" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
-        <TextBlock x:Name="tblNick" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="86" HorizontalAlignment="Left" VerticalAlignment="Center" Height="19" Width="30"/>
-        <TextBlock x:Name="tblLevel" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="112" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
-        <TextBlock x:Name="tblSale" Canvas.Left="289" TextWrapping="Wrap" Text="" Canvas.Top="138" HorizontalAlignment="Left" VerticalAlignment="Center" Height="20" Width="30"/>
-        <ComboBox x:Name="cbColumnName" Canvas.Left="9" Canvas.Top="5" Width="120" Height="24"/>
-    </Canvas>
+    </Grid>
 </Window>
