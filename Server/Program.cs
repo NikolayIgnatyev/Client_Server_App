@@ -10,8 +10,6 @@ namespace Server
     {
         static void Main(string[] args)
         {
-
-
             // Устанавливаем для сокета локальную конечную точку
             IPHostEntry ipHost = Dns.GetHostEntry("localhost");
             IPAddress ipAddr = ipHost.AddressList[0];
@@ -24,8 +22,9 @@ namespace Server
             // Назначаем сокет локальной конечной точке и слушаем входящие сокеты
             try
             {
+                int maxValueConnection = 10;
                 sListener.Bind(ipEndPoint);
-                sListener.Listen(10);
+                sListener.Listen(maxValueConnection);
 
                 // Начинаем слушать соединения
                 while (true)
@@ -43,29 +42,27 @@ namespace Server
                     int bytesRec = handler.Receive(bytes);
 
                     data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                    Console.WriteLine($"Входящие данные: {data}");
                     string[] dataedit = data.Split(new char[] { ';', });
                     string work = dataedit[0];
                     string dataDB = dataedit[1];
-                    Console.WriteLine($"Входящие данные: {data}");
                     ConnectionDB.OpenConnection();
                     string reply = "";
                     byte[] msg;
                     switch (work)
                     {
                         case "SEARCH":
-                            if(dataDB.Contains("IMAGE"))
-                            {
-                                avatar = ConnectionDB.SearchImage(dataDB);
-                                handler.Send(avatar);
-                                Console.WriteLine($"Отправленые данные: {reply}");
-                            }
-                            else
-                            {
-                                reply = ConnectionDB.Search(dataDB);
-                                msg = Encoding.UTF8.GetBytes(reply);
-                                handler.Send(msg);
-                                Console.WriteLine($"Отправленые данные: {reply}");
-                            }             
+                            reply = ConnectionDB.Search(dataDB);
+                            msg = Encoding.UTF8.GetBytes(reply);
+                            handler.Send(msg);
+                            Console.WriteLine($"Отправленые данные: {reply}");
+                            break;
+
+                        case "SEARCHIMAGE":
+                            Console.WriteLine("SEARCHIMAGE");
+                            avatar = ConnectionDB.SearchImage(dataDB);
+                            handler.Send(avatar);
+                            Console.WriteLine($"Отправленые данные: image");
                             break;
 
                         case "INSERT":

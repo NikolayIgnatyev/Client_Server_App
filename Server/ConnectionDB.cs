@@ -28,8 +28,8 @@ namespace Server
         public static byte[] SearchImage(string data)
         {
             string[] strArr = data.Split(',');
-            string columnName = strArr[1];
-            data = strArr[2];
+            string columnName = strArr[0];
+            data = strArr[1];
             byte[] avatar = new byte[1024];
             using (NpgsqlCommand command = new NpgsqlCommand($"SELECT avatar FROM people WHERE {columnName}='{data}';", con))
             {
@@ -48,7 +48,6 @@ namespace Server
             string[] strArr = data.Split(',');
             string columnName = strArr[0];
             data = strArr[1];
-            Console.WriteLine($"{columnName},{data}");
             string reply = "";
             using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM people WHERE {columnName}='{data}';", con))
             {
@@ -87,7 +86,7 @@ namespace Server
                 }
                 catch (Exception ex)
                 {
-                    reply = ex.Message;
+                    reply = ex.ToString();
                 }
                 using (NpgsqlCommand command = new NpgsqlCommand($"INSERT INTO people (name, age, nickname, level, sale, avatar) VALUES (@n, @a, @nick, @lvl, @sale, @avatar)", con))
                 {
@@ -100,12 +99,12 @@ namespace Server
 
                     int nRows = command.ExecuteNonQuery();
                     Console.WriteLine(String.Format("Number of rows inserted={0}", nRows));
-                    reply = String.Format("Number of rows inserted={0}", nRows);
+                    reply = String.Format("INSERTED");
                 }
             }
             catch (Exception ex)
             {
-                reply = ex.Message;
+                reply = ex.ToString();
             }
             return reply;
         }
@@ -124,7 +123,7 @@ namespace Server
                 }
                 catch (Exception ex)
                 {
-                    reply = ex.Message;
+                    reply = ex.ToString();
                 }
                 using (NpgsqlCommand command = new NpgsqlCommand($"INSERT INTO people (name, age, nickname, level, sale, avatar) VALUES (@n, @a, @nick, @lvl, @sale, @avatar)", con))
                 {
@@ -137,12 +136,12 @@ namespace Server
 
                     int nRows = command.ExecuteNonQuery();
                     Console.WriteLine(String.Format("Number of rows inserted={0}", nRows));
-                    reply = String.Format("Number of rows inserted={0}", nRows);
+                    reply = String.Format("INSERTED");
                 }
             }
             catch (Exception ex)
             {
-                reply = ex.Message;
+                reply = ex.ToString();
             }
             return reply;
         }
@@ -165,7 +164,7 @@ namespace Server
             }
             catch (Exception ex)
             {
-                reply = ex.Message;
+                reply = ex.ToString();
             }
             return reply;
         }

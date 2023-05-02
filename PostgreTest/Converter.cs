@@ -9,7 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace PostgreTest
+namespace ClientServerApp
 {
     public static class Converter
     {

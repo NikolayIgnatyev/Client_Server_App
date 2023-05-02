@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PostgreTest.Properties
+namespace ClientServerApp.Properties
 {
 
 

@@ -168,6 +168,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Converter.cs" />
+    <Compile Include="Sender.cs" />
     <Compile Include="WindowInsert.xaml.cs">
       <DependentUpon>WindowInsert.xaml</DependentUpon>
     </Compile>

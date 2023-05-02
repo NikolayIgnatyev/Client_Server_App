@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace PostgreTest
+namespace ClientServerApp
 {
     /// <summary>
     /// Логика взаимодействия для App.xaml
