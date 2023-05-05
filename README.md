@@ -1,4 +1,4 @@
-# PostgreTest
+# Client Server Application
 
 Зависимости:
 - PostgreSQL
