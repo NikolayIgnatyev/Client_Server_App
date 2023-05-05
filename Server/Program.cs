@@ -41,7 +41,7 @@ namespace Server
                     byte[] avatar = new byte[2097152];
                     int bytesRec = handler.Receive(bytes);
 
-                    data += Encoding.UTF8.GetString(bytes, 0, bytesRec);
+                    data = Encoding.UTF8.GetString(bytes, 0, bytesRec);
                     Console.WriteLine($"Входящие данные: {data}");
                     string[] dataedit = data.Split(new char[] { ';', });
                     string work = dataedit[0];

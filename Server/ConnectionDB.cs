@@ -36,7 +36,15 @@ namespace Server
                 var reader = command.ExecuteReader();
                 while (reader.Read())
                 {
-                    avatar = (byte[])reader[0];
+                    if(reader.GetValue(0) != DBNull.Value)
+                    {
+                        avatar = (byte[])reader.GetValue(0);
+                    }
+                    else
+                    {
+                        string reply = "NOFOTO";
+                        avatar = Encoding.UTF8.GetBytes(reply);
+                    }
                 }
                 reader.Close();
             }

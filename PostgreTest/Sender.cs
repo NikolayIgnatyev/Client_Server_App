@@ -14,7 +14,7 @@ namespace ClientServerApp
     internal static class Sender
     {
         // Буфер для входящих данных
-        static byte[] bytes = new byte[262144];
+        static byte[] bytes = new byte[2097152];
         static Socket sender;
 
         public static void OpenSocketConnection(int port)

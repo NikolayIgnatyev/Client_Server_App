@@ -19,6 +19,7 @@ using Newtonsoft.Json.Linq;
 using WebSocketSharp;
 using static System.Collections.Specialized.BitVector32;
 using System.IO;
+using System.Windows.Markup;
 
 namespace ClientServerApp
 {
@@ -30,6 +31,7 @@ namespace ClientServerApp
     {
         string reply;
         byte[] bytes = new byte[262144];
+        byte[] avatar = new byte[2097152];
         int bytesRec;
 
         public MainWindow()
@@ -41,6 +43,20 @@ namespace ClientServerApp
         {
             if (tbsender.Text != "")
             {
+                try
+                {
+                    if (cbColumnName.SelectedItem.ToString() == "age" | 
+                        cbColumnName.SelectedItem.ToString() == "sale" |
+                        cbColumnName.SelectedItem.ToString() == "level")
+                    {
+                        int.Parse(tbsender.Text);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
                 try
                 {
                     (bytes, bytesRec) = Sender.SendMessageFromSocket("SEARCHNOTIMAGE;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text);
@@ -56,7 +72,7 @@ namespace ClientServerApp
                     else
                     {
                         lstVw.Items.Clear();
-                        byte[] avatar = new byte[2097152];
+                        
                         string[] dataReply = reply.Split(';');
                         for (int i = 0; i < dataReply.Length; i++)
                         {
@@ -64,33 +80,6 @@ namespace ClientServerApp
                             lstVw.Items.Add(new User { Name = user[0], Age = user[1], Nickname = user[2], Level = user[3], Discount = user[4] });
                         }
                     }
-
-                        //if (reply.Contains("IMAGE"))
-                        //{
-                        //    Console.WriteLine("get image");
-                        //    try
-                        //    {
-                        //        avatar = Sender.SendMessageFromSocket("SEARCHIMAGE;" + cbColumnName.SelectedItem.ToString() + "," + tbsender.Text).bytes;
-                        //    }
-                        //    catch (Exception ex)
-                        //    {
-                        //        Console.WriteLine(ex.ToString());
-                        //    }
-                        //    finally
-                        //    {
-                        //        Console.ReadLine();
-                        //    }
-                        //    BitmapImage avatarImage = new BitmapImage();
-                        //    avatarImage.BeginInit();
-                        //    avatarImage.StreamSource = new MemoryStream(avatar);
-                        //    avatarImage.EndInit();
-                        //    imgAvatar.Source = avatarImage;
-                        //}
-                        //else
-                        //{
-                        //    imgAvatar.Source = Converter.ConvertToBitmapImage(Properties.Resources.ImageNotFound);
-                        //}
-                    
                 }
                 catch (Exception ex)
                 {
@@ -130,6 +119,33 @@ namespace ClientServerApp
                 else
                 {
                     this.Close();
+                }
+            }
+        }
+
+        private void lstVw_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (lstVw.Items.Count > 0)
+            {
+                User selectItem = (User)lstVw.SelectedItem;
+                tblName.Text = selectItem.Name;
+                tblAge.Text = selectItem.Age;
+                tblNick.Text = selectItem.Nickname;
+                tblLevel.Text = selectItem.Level;
+                tblSale.Text = selectItem.Discount;
+
+                (avatar, bytesRec) = Sender.SendMessageFromSocket("SEARCHIMAGE;" + "nickname" + "," + selectItem.Nickname);
+                if (!Encoding.UTF8.GetString(avatar, 0, bytesRec).Contains("NOFOTO"))
+                {
+                    BitmapImage avatarImage = new BitmapImage();
+                    avatarImage.BeginInit();
+                    avatarImage.StreamSource = new MemoryStream(avatar);
+                    avatarImage.EndInit();
+                    imgAvatar.Source = avatarImage;
+                }
+                else
+                {
+                    imgAvatar.Source = Converter.ConvertToBitmapImage(Properties.Resources.ImageNotFound);
                 }
             }
         }
